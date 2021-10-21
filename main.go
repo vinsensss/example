@@ -1,23 +1,40 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func main() {
-	jobs := make(chan int, 100)
-	results := make(chan int, 100)
+	jobsFib := make(chan int, 100)
+	resultsFib := make(chan int, 100)
+	jobs := make(chan int64, 100)
+	results := make(chan int64, 100)
 
-	go worker(jobs, results)
-	go worker(jobs, results)
-	go worker(jobs, results)
-	go worker(jobs, results)
+	go workerFactorial(jobs, results)
+	go workerFactorial(jobs, results)
 
-	for i := 0; i < 100; i++ {
-		jobs <- i
+	go worker(jobsFib, resultsFib)
+	go worker(jobsFib, resultsFib)
+	go worker(jobsFib, resultsFib)
+	go worker(jobsFib, resultsFib)
+	go worker(jobsFib, resultsFib)
+	go worker(jobsFib, resultsFib)
+
+	counter := 10
+	for i := 0; i < counter; i++ {
+		jobs <- int64(i)
+		jobsFib <- i
 	}
 	close(jobs)
 
-	for j := 0; j < 100; j++ {
-		fmt.Println(<-results)
+	for j := 0; j < counter; j++ {
+		select {
+		case <-results:
+			fmt.Println("and FAC result of", j, "is:", <-results)
+
+		case <-resultsFib:
+			fmt.Println("and FIB result of", j, "is:", <-resultsFib)
+		}
 	}
 }
 
@@ -27,10 +44,8 @@ func worker(jobs <-chan int, results chan<- int) {
 	}
 }
 
-func fib(n int) int {
-	if n <= 1 {
-		return n
+func workerFactorial(jobs <-chan int64, results chan<- int64) {
+	for n := range jobs {
+		results <- factorial(int64(n))
 	}
-
-	return fib(n-1) + fib(n-2)
 }
