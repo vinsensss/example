@@ -11,7 +11,6 @@ func main() {
 	results := make(chan int64, 100)
 
 	go workerFactorial(jobs, results)
-	go workerFactorial(jobs, results)
 
 	go worker(jobsFib, resultsFib)
 	go worker(jobsFib, resultsFib)
@@ -28,13 +27,16 @@ func main() {
 	close(jobs)
 
 	for j := 0; j < counter; j++ {
-		select {
-		case <-results:
-			fmt.Println("and FAC result of", j, "is:", <-results)
+		// select {
+		// case <-results:
+		// 	fmt.Println("and FAC result of", j, "is:", <-results)
 
-		case <-resultsFib:
-			fmt.Println("and FIB result of", j, "is:", <-resultsFib)
-		}
+		// case <-resultsFib:
+		// 	fmt.Println("and FIB result of", j, "is:", <-resultsFib)
+		// }
+
+		fmt.Println("and FAC result of", j, "is:", <-results)
+		//fmt.Println("and FIB result of", j, "is:", <-resultsFib)
 	}
 }
 
