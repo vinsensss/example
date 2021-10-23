@@ -18,8 +18,14 @@ func main() {
 	go worker(jobsFib, resultsFib)
 	go worker(jobsFib, resultsFib)
 	go worker(jobsFib, resultsFib)
+	go worker(jobsFib, resultsFib)
+	go worker(jobsFib, resultsFib)
+	go worker(jobsFib, resultsFib)
+	go worker(jobsFib, resultsFib)
+	go worker(jobsFib, resultsFib)
+	go worker(jobsFib, resultsFib)
 
-	counter := 10
+	counter := 50
 	for i := 0; i < counter; i++ {
 		jobs <- int64(i)
 		jobsFib <- i
@@ -35,8 +41,8 @@ func main() {
 		// 	fmt.Println("and FIB result of", j, "is:", <-resultsFib)
 		// }
 
-		fmt.Println("and FAC result of", j, "is:", <-results)
-		//fmt.Println("and FIB result of", j, "is:", <-resultsFib)
+		//fmt.Println("and FAC result of", j, "is:", <-results)
+		fmt.Println("and FIB result of", j, "is:", <-resultsFib)
 	}
 }
 
